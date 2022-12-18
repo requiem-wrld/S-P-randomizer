@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Homepage</title>
+  </head>
+  <body>
+    <center>
+        <style>
+            .div1 {
+        color:blue;
+  width: 500px;
+  height: 50px;
+  border: 2px solid rgb(0, 0, 0); 
+}
+        </style>
+        <h2 class="div1">WHAT'S WRONG WITH MY STOCK</h2>
+    </center>
+
+    <hr size="3" noshade>
+    <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column;">
+        <button onclick="toggleAccordion('own')">Own</button>
+        <div id="own" style="display: none;">
+
+            
+          <p>Own information goes here</p>
+
+        </div>
+        <br>
+        <button onclick="toggleAccordion('research')">Research</button>
+        <div id="research" style="display: none;">
+          <p>Research information goes here</p>
+        </div>
+        <br>
+        <button onclick="toggleAccordion('sold')">Sold</button>
+        <div id="sold" style="display: none;">
+          <p>Sold information goes here</p>
+        </div>
+        <br>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <p>Flexbox display goes here</p>
+      </div>
+    </div>
+    <hr size="3" noshade>
+    <div style="display: flex; justify-content: space-between;">
+      <button onclick="toggleAccordion('e1')">E1</button>
+      <div id="e1" style="display: none;">
+        <p>E1 information goes here</p>
+      </div>
+      <button onclick="toggleAccordion('e2')">E2</button>
+      <div id="e2" style="display: none;">
+        <p>E2 information goes here</p>
+      </div>
+      <button onclick="toggleAccordion('e3')">E3</button>
+      <div id="e3" style="display: none;">
+        <p>E3 information goes here</p>
+      </div>
+    </div>
+    <script>
+      function toggleAccordion(id) {
+        var element = document.getElementById(id);
+        if (element.style.display === "none") {
+          element.style.display = "block";
+        } else {
+          element.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
