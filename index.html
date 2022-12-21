@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    
+  </head>
+  <body>
+      
+    <center>
+        <style>
+            .div1 {
+        color:black;
+  width: 500px;
+  height: 50px;
+  border: 2px solid rgb(0, 0, 0); 
+}
+        </style>
+        <h2 class="div1">The Daily Stock Report</h2>
+    </center>
+    <div style="display:flex; justify-content: center; align-items: center;">
+        <style>
+            .red-button{
+                background-color: red;
+                color: white;
+                border: 2px solid black;
+                font-size: 68px !important;
+                padding: 75px;
+                margin: 50px;
+            }
+            .green-button{
+                background-color: green;
+                color: white;
+                border: 2px solid black;
+                font-size: 68px !important;
+                padding: 75px;
+                margin: 50px;
+            }
+        </style>
+          <button class="red-button" id='red_button'>📉</button>
+          <button class="green-button" id='green_button'>📈</button>
+      </div>
+      
+  </body>
+    <script>
+        async function getRandomTickers(){
+            const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=W0OFE98EGHHZ267N`);
+            const data = await response.json();
+            const tickers = data['Rank A: Real-Time Peformance'];
+            return tickers[Math.floor(Math.random() * tickers.length)];
+
+            const stockDataDiv = document.getElementById('stock-data');
+            stockDataDiv.innerHTML = `
+            <h2>Stock Data</h2>
+            <p> Ticket Symbol: ${stockData['01.symbol']}</p>
+            <p>Price: ${stockData['05. price']}</p>
+          <p>Change: ${stockData['09. change']}</p>
+          <p>Change Percent: ${stockData['10. change percent']}</p>
+          `};
+    </script>
+    <script>     
+        function init(){
+            const red_button = document.getElementById('red_button');
+            const green_button = document.getElementById('green_button');
+
+            red_button.addEventListener('click', async function(){
+                const ticker = await getRandomTickers();
+                await getStockData(ticker);
+            })
+            green_button.addEventListener('click', async function(){
+                const ticker = await getRandomTickers();
+                await getStockData(ticker);
+            })
+        }
+        document.addEventListener('DOMContentLoaded', init);
+        </script>
+</html>
