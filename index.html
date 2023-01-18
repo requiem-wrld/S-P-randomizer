@@ -1,79 +1,89 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-    
-  </head>
-  <body>
-      
-    <center>
-        <style>
-            .div1 {
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+</head>
+<body>
+  <center>
+    <style>
+      .div1 {
         color:black;
-  width: 500px;
-  height: 50px;
-  border: 2px solid rgb(0, 0, 0); 
-}
-        </style>
-        <h2 class="div1">The Daily Stock Report</h2>
-    </center>
-    <div style="display:flex; justify-content: center; align-items: center;">
-        <style>
-            .red-button{
-                background-color: red;
-                color: white;
-                border: 2px solid black;
-                font-size: 68px !important;
-                padding: 75px;
-                margin: 50px;
-            }
-            .green-button{
-                background-color: green;
-                color: white;
-                border: 2px solid black;
-                font-size: 68px !important;
-                padding: 75px;
-                margin: 50px;
-            }
-        </style>
-          <button class="red-button" id='red_button'>📉</button>
-          <button class="green-button" id='green_button'>📈</button>
-      </div>
-      
-  </body>
-    <script>
-        async function getRandomTickers(){
-            const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=W0OFE98EGHHZ267N`);
-            const data = await response.json();
-            const tickers = data['Rank A: Real-Time Peformance'];
-            return tickers[Math.floor(Math.random() * tickers.length)];
+        width: 500px;
+        height: 50px;
+        border: 2px solid rgb(0, 0, 0); 
+      }
+    </style>
+    <h2 class="div1">Fortunate or not</h2>
+  </center>
+  <div style="display:flex; flex-direction: column; align-items: center;">
+    <style>
+      .restart-button {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+        font-size: 10px;
+      }
+      .data-button {
+        border: 2px solid black;
+        color: black;
+        font-size: 30px;
+      }
+    </style>
+    <button id='generate' class="data-button">Press me!</button>
+    <div id="data-container"></div>
+    <br>
+    <button class="restart-button" id='restart'>Restart me!</button>
 
-            const stockDataDiv = document.getElementById('stock-data');
-            stockDataDiv.innerHTML = `
-            <h2>Stock Data</h2>
-            <p> Ticket Symbol: ${stockData['01.symbol']}</p>
-            <p>Price: ${stockData['05. price']}</p>
-          <p>Change: ${stockData['09. change']}</p>
-          <p>Change Percent: ${stockData['10. change percent']}</p>
-          `};
+  </div>
+
+  <script>
+    const resetButton = document.getElementById('restart');
+    resetButton.addEventListener('click', function(){
+        location.reload();
+      });
+      const random = document.querySelector('#generate');
+      random.addEventListener('click', function(){
+        getData().then(data =>{
+          const changePercent = data['Global Quote']['10. change percent'];
+          const ticker = data['Global Quote']['01. symbol'];
+          const container = document.querySelector('#data-container');
+          if (changePercent.includes("-")){
+            container.innerHTML = `<p> Ticker: ${ticker}</p>  <p> Change percentage: ${changePercent}</p>`;
+          document.body.style.backgroundImage ='url(https://media.tenor.com/THRWGV9xxRQAAAAC/wojak-pink.gif)';
+          } else  if (!changePercent.includes("-")){
+            container.innerHTML = `<p> Ticker: ${ticker}</p>  <p> Change percentage: ${changePercent}</p>`;
+          document.body.style.backgroundImage ='url(https://i.kym-cdn.com/entries/icons/original/000/026/688/greenwojak.jpg)';
+          } else{
+            container.innerHTML = `<p> No stock available, press restart! </p>`;
+          }
+        })
+      })
     </script>
-    <script>     
-        function init(){
-            const red_button = document.getElementById('red_button');
-            const green_button = document.getElementById('green_button');
-
-            red_button.addEventListener('click', async function(){
-                const ticker = await getRandomTickers();
-                await getStockData(ticker);
-            })
-            green_button.addEventListener('click', async function(){
-                const ticker = await getRandomTickers();
-                await getStockData(ticker);
-            })
+    
+     <br>
+<script>
+          const api_key = 'W0OFE98EGHHZ267N';
+  function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
         }
-        document.addEventListener('DOMContentLoaded', init);
+        const stockArray = [
+  "MMM", "AOS", "ABT", "ABBV", "ABMD", "ACN", "ATVI", "ADM", "ADBE", "ADP", "AAP", "AES", "AFL", "A", "APD", "AKAM", "ALK", "ALB", "ARE", "ALGN", "ALLE", "LNT", "ALL", "GOOGL", "GOOG", "MO", "AMZN", "AMCR", "AMD", "AEE", "AAL", "AEP", "AXP", "AIG", "AMT", "AWK", "AMP", "ABC", "AME", "AMGN", "APH", "ADI", "ANSS", "AON", "APA", "AAPL", "AMAT", "APTV", "ACGL", "ANET", "AJG", "AIZ", "T", "ATO", "ADSK", "AZO", "AVB", "AVY", "BKR", "BAL", "BAC", "BBWI", "BAX", "BDX", "WRB", "BRK.B", "BBY", "BIO", "TECH", "BIIB", "BLK", "BK", "BA", "BKNG", "BWA", "BXP", "BSX", "BMY", "AVGO", "BR", "BRO", "BF.B", "CHRW", "CDNS", "CZR", "CPT", "CPB", "CO",   "F", "FTNT", "FTV", "FOXA", "FOX", "BEN", "FCX", "GRMN", "IT", "GEN", "GNRC", "GD", "GE", "GIS", "GM", "GPC", "GILD", "GL", "GPN", "GS", "HAL", "HIG", "HAS", "HCA", "PEAK", "HSIC", "HSY", "HES", "HPE", "HLT", "HOLX", "HD", "HON", "HRL", "HST", "HWM", "HPQ", "HUM", "HBAN", "HII", "IBM", "IEX", "IDXX", "ITW", "ILMN", "INCY", "IR", "INTC", "ICE", "IP", "IPG", "IFF", "INTU", "ISRG", "IVZ", "INVH", "IQV", "IRM", "JBHT", "JKHY", "J", "JNJ", "JCI", "JPM", "JNPR", "K", "KDP", "KEY", "KEYS", "KMB", "KIM", "KMI", "KLAC", "KHC", "KR", "LHX", "LH", "LRCX", "LW", "LVS", "LDOS", "LEN", "LNC", "LIN", "LYV", "LKQ", "LMT", "L", "LOW", "LUMN", "LYB", "MTB", "MRO",   "NEE", "NKE", "NI", "NDSN", "NSC", "NTRS", "NOC", "NCLH", "NRG", "NUE", "NVDA", "NVR", "ORLY", "OXY", "ODFL", "OMC", "OKE", "ORCL", "PCAR", "PKG", "PH", "PDCO", "PAYX", "PAYC", "PYPL", "PNR", "PBCT", "PEP", "PKI", "PRGO", "PFE", "PM", "PSX", "PNW", "PXD", "PNC", "PPG", "PPL", "PFG", "PG", "PGR", "PLD", "PRU", "PEG", "PSA", "PHM", "PVH", "QRVO", "QCOM", "RJF", "RTN", "O", "REG", "REGN", "RF", "RSG", "RMD", "RHI", "ROK", "ROL", "ROP", "ROST", "RCL", "SPGI", "CRM", "SBAC", "SLB", "STX", "SEE", "SRE", "SHW", "SIG", "SPG", "SWKS", "SLG", "SNA", "SO", "LUV", "SWK", "SBUX", "STT", "STE", "SPLS", "S", "SRCL", "SYK", "STI", "SYF", "SNPS", "SYY", "TMUS", "TROW", "TTWO", "TPR", "TGT", "TEL", "FTI", "TFX", "TXN", "TXT", "TMO", "TIF", "TWTR", "TJX", "TSCO", "TDG", "TRV", "TFC", "T",   "UPS", "URI", "UTX", "UHS", "UNM", "VFC", "VLO", "VAR", "VTR", "VRSN", "VZ", "VRTX", "VIAC", "V", "VNO", "VMC", "WRK", "WAB", "WMT", "WBA", "DIS", "WM", "WAT", "WEC", "WFC", "WELL", "WDC", "WU", "WRD", "WY", "WHR", "WMB", "WLTW", "WYNN", "XEL", "XRX", "XLNX", "XYL", "YUM", "ZBRA", "ZBH", "ZION", "ZTS"]
+     var x = getRandomInt(stockArray.length);
+        symbol=stockArray[x];
+    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${api_key}`;
+    async function getData() {
+          try {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        
         </script>
+</body>
 </html>
