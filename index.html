@@ -19,14 +19,19 @@
   <div class="content-body">
     <div class="news-bar">
       <div class="news-headline">Breaking News!</div>
-      <div class="news-info">a</div>
+      <div class="news-info">
+        <div id="news-url"></div>
+      </div>
     </div>
     <div class="info-body">
    <div class="generate-bar">
      <button id="restart" class="generate-buttons">Reset me!</button>
      <button id="random" class="generate-buttons">Roll the Dice!</button>
    </div>
-   <div class="container-info" id="data-container">a</div>
+   <div class="container-info">
+       <div class="container-text" id="data-container">Roll that dice...</div>
+   </div>
+   <div id="image-box"></div>
     </div>
   </div>
   <div class="footer">Copyright @ requiem-wrld 2023</div>
@@ -35,17 +40,28 @@
     resetButton.addEventListener('click', function(){
         location.reload();
       });
-      const random = document.querySelector('random');
+      const backGround = document.getElementById('image-box');
+      const random = document.querySelector('#random');
       random.addEventListener('click', function(){
         getData().then(data =>{
-          const changePercent = data['Global Quote']['10. change percent'];
           const ticker = data['Global Quote']['01. symbol'];
+          const open = data['Global Quote']['02. open'];
+          const price = data['Global Quote']['05. price'];
+          const changePercent = data['Global Quote']['10. change percent'];
           const container = document.querySelector('#data-container');
-          if (changePercent.includes("-")){
-            container.innerHTML = `<p> Ticker: ${ticker}</p>  <p> Change percentage: ${changePercent}</p>`;
-          } else  if (!changePercent.includes("-")){
-            container.innerHTML = `<p> Ticker: ${ticker}</p>  <p> Change percentage: ${changePercent}</p>`;
-          } 
+          if(changePercent.includes('-')){
+          container.innerHTML = `<p> Ticker: $${ticker}</p> <p> Open: $${open} </p> <p> Current Price: $${price} </p> <p> Change percentage: ${changePercent}</p>`;
+          backGround.style.backgroundImage = "url('images/sad-peepo.gif')";
+          }else if(!changePercent.includes('-')){
+          container.innerHTML = `<p> Ticker: $${ticker}</p> <p> Open: $${open} </p> <p> Current Price: $${price} </p> <p> Change percentage: ${changePercent}</p>`;
+          backGround.style.backgroundImage = "url('images/sad-peepo.gif')";
+        }
+        getNews().then(newsData =>{
+            const link = newsData["feed"]["url"];
+            const newsInfo = document.querySelector('#news-url');
+            console.log(newsInfo);
+            newsInfo.innerHTML = `<p> News1: ${link}`;
+        })
         })
       })
   </script>
@@ -59,6 +75,7 @@ function getRandomInt(max) {
 var x = getRandomInt(stockArray.length);
   symbol=stockArray[x];
 const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${api_key}`;
+const newsUrl= `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${api_key}`;
 async function getData() {
     try {
       const response = await fetch(url);
@@ -68,7 +85,16 @@ async function getData() {
       console.error(error);
     }
   }
-  
+  async function getNews() {
+    try {
+      const newsResponse = await fetch(newsUrl);
+      const newsData = await newsResponse.json();
+      return newsData;
+    } catch (error) {
+      console.error(error);
+    }
+  }
   </script>
+  
 </body>
 </html>
