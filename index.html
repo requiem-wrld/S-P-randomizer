@@ -11,16 +11,16 @@
   <nav class="navbar">
     <div class="header-logo"><img src="images/fortunate or not .png" ></div>
     <ul class="nav-links">
-      <li><a class="text-color" href="#">About</a></li>
-      <li><a class="text-color" href="#">FAQ</a></li>
-      <li><a class="text-color" href="#">Contact</a></li>
+      <li><a class="text-color" href="about.html">About</a></li>
+      <li><a class="text-color" href="faq.html">FAQ</a></li>
+      <li><a class="text-color" href="contact.html">Contact</a></li>
     </ul>
   </nav>
   <div class="content-body">
     <div class="news-bar">
       <div class="news-headline">Breaking News!</div>
       <div class="news-info">
-        <div id="news-url"></div>
+        <div id="news-container"></div>
       </div>
     </div>
     <div class="info-body">
@@ -40,7 +40,6 @@
     resetButton.addEventListener('click', function(){
         location.reload();
       });
-      const backGround = document.getElementById('image-box');
       const random = document.querySelector('#random');
       random.addEventListener('click', function(){
         getData().then(data =>{
@@ -49,19 +48,23 @@
           const price = data['Global Quote']['05. price'];
           const changePercent = data['Global Quote']['10. change percent'];
           const container = document.querySelector('#data-container');
+           const backGround = document.getElementById('image-box');
           if(changePercent.includes('-')){
           container.innerHTML = `<p> Ticker: $${ticker}</p> <p> Open: $${open} </p> <p> Current Price: $${price} </p> <p> Change percentage: ${changePercent}</p>`;
           backGround.style.backgroundImage = "url('images/sad-peepo.gif')";
           }else if(!changePercent.includes('-')){
           container.innerHTML = `<p> Ticker: $${ticker}</p> <p> Open: $${open} </p> <p> Current Price: $${price} </p> <p> Change percentage: ${changePercent}</p>`;
-          backGround.style.backgroundImage = "url('images/sad-peepo.gif')";
+          backGround.style.backgroundImage = "url('images/happy-peepo.gif')";
         }
-        getNews().then(newsData =>{
-            const link = newsData["feed"]["url"];
-            const newsInfo = document.querySelector('#news-url');
-            console.log(newsInfo);
-            newsInfo.innerHTML = `<p> News1: ${link}`;
-        })
+        getNews().then(newsData => {
+          const data = newsData.feed
+      const newsInfo = document.querySelector('#news-container');
+        for (let i = 0; i < 5; i++) {
+          const title = data[i].title;
+          const url = data[i].url;
+          newsInfo.innerHTML += `<p> <a href="${url}">${title}</a> </p>`;
+    }
+      });
         })
       })
   </script>
@@ -85,15 +88,12 @@ async function getData() {
       console.error(error);
     }
   }
-  async function getNews() {
-    try {
-      const newsResponse = await fetch(newsUrl);
-      const newsData = await newsResponse.json();
-      return newsData;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const getNews = async () => {
+    const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${symbol}&apikey=${api_key}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+}
   </script>
   
 </body>
